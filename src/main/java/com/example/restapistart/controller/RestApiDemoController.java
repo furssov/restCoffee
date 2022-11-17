@@ -17,42 +17,38 @@ public class RestApiDemoController {
 
     private final CoffeeRepository coffeeRepository;
 
-    @Autowired
     public RestApiDemoController(CoffeeRepository coffeeRepository) {
         this.coffeeRepository = coffeeRepository;
     }
 
     @GetMapping
-    public Iterable<Coffee> getAll()
-    {
+    Iterable<Coffee> getCoffees() {
         return coffeeRepository.findAll();
     }
 
-    @PostMapping()
-    public Coffee postCoffee(@RequestBody Coffee coffee)
-    {
-        coffeeRepository.save(coffee);
-        return coffee;
-    }
-
     @GetMapping("/{id}")
-    public Optional<Coffee> getCoffee(@PathVariable int id)
-    {
-
+    Optional<Coffee> getCoffeeById(@PathVariable String id) {
         return coffeeRepository.findById(id);
     }
 
+    @PostMapping
+    Coffee postCoffee(@RequestBody Coffee coffee) {
+        return coffeeRepository.save(coffee);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Coffee> changeCoffee(@PathVariable int id, @RequestBody Coffee coffee) {
+    ResponseEntity<Coffee> putCoffee(@PathVariable String id,
+                                     @RequestBody Coffee coffee) {
+
         return (coffeeRepository.existsById(id))
                 ? new ResponseEntity<>(coffeeRepository.save(coffee), HttpStatus.OK)
                 : new ResponseEntity<>(coffeeRepository.save(coffee), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public void  deleteCoffee(@PathVariable int id)
-    {
+    void deleteCoffee(@PathVariable String id) {
         coffeeRepository.deleteById(id);
     }
+
 
 }
